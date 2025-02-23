@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int    @id @default(autoincrement())
+  userId      String @unique
+  chatId      String
+  userNickname String
+  subscriptions Subscription[]
+}
+
+model Crypto {
+  id          Int     @id @default(autoincrement())
+  symbol      String  @unique  
+  name        String  
+  price       Float   
+  marketCap   Float?  
+  volume24h   Float?  
+  updatedAt   DateTime @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int
+  crypto   Crypto @relation(fields: [cryptoId], references: [id], onDelete: Cascade)
+  cryptoId Int
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, cryptoId]) 
+}

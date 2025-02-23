@@ -1,0 +1,103 @@
+.tableContainer {
+    width: 80%; 
+    margin: 20px auto; 
+    overflow-x: auto; 
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #e0e0e0; 
+  }
+  
+  th, td {
+    border: 1px solid #bdbdbd; 
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+    color: #212121; 
+    transition: background-color 0.3s ease;
+  }
+  
+  th {
+    background-color: #616161; 
+    color: white; 
+  }
+  
+  td {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #d5d5d5; 
+    cursor: pointer; 
+  }
+  
+  table th, table td {
+    border-radius: 8px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .table {
+      width: 100%;
+    }
+  
+    .table thead {
+      display: none; 
+    }
+  
+    .table tbody tr {
+      display: block;
+      margin-bottom: 10px;
+      border: 1px solid #bdbdbd; 
+      border-radius: 10px;
+      background-color: #fafafa; 
+    }
+  
+    .table tbody td {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px; 
+      font-size: 16px; 
+    }
+  
+    .table tbody td:before {
+      content: attr(data-label);
+      font-weight: bold;
+      flex-basis: 50%;
+      text-align: left;
+      color: #616161; 
+    }
+
+    .table tbody tr {
+      background-color: #fafafa; 
+    }
+  }
+  
+
+  .paginationButtonsContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .paginationButton {
+    background-color: transparent;
+    border: 2px solid gray;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+  }
+  
+  .paginationButton svg {
+    fill: silver;
+    transition: transform 0.3s ease; 
+  }
+  
+  
