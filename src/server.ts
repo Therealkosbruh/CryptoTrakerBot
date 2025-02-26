@@ -1,8 +1,9 @@
-import * as dotenv from 'dotenv';
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
-import { fetchAndStoreCryptoData } from "./services/cryptoService";
-import { PrismaClient } from '@prisma/client';
+import * as dotenv from "dotenv";
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import { fetchAndStoreCryptoData, getChangedCryptos } from "./services/cryptoService";
+import { subscribeToCrypto } from "./constollers/subscribeController";
+import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
 
@@ -23,40 +24,7 @@ app.get("/cryptos", async (req: Request, res: Response) => {
     }
 });
 
-app.post(
-    "/subscribe",
-    async (req: Request, res: Response): Promise<void> => {
-        const { userId, cryptoId } = req.body;
-
-        if (!userId || !cryptoId) {
-            res.status(400).json({ error: "userId и cryptoId обязательны" });
-            return;
-        }
-
-        try {
-            const existingSubscription = await prisma.subscription.findFirst({
-                where: {
-                    userId: Number(userId),
-                    cryptoId: Number(cryptoId),
-                },
-            });
-
-            if (existingSubscription) {
-                res.status(400).json({ error: "Вы уже подписаны на эту валюту" });
-                return;
-            }
-
-            const subscription = await prisma.subscription.create({
-                data: { userId: Number(userId), cryptoId: Number(cryptoId) },
-            });
-
-            res.json(subscription);
-        } catch (error) {
-            console.error("Ошибка подписки:", error);
-            res.status(500).json({ error: "Ошибка сервера" });
-        }
-    }
-);
+app.post("/subscribe", subscribeToCrypto);
 
 app.get("/update-crypto", async (req: Request, res: Response) => {
     try {
@@ -68,9 +36,33 @@ app.get("/update-crypto", async (req: Request, res: Response) => {
     }
 });
 
+app.get("/changed-cryptos", async (req: Request, res: Response) => {
+    try {
+        const changedCryptos = await getChangedCryptos();
+        res.json(changedCryptos);
+    } catch (error) {
+        console.error("Ошибка при получении изменившихся криптовалют:", error);
+        res.status(500).json({ error: "Ошибка сервера" });
+    }
+});
+
+const checkAndSendChangedCryptos = async () => {
+    try {
+        const changedCryptos = await getChangedCryptos();
+        if (changedCryptos.length > 0) {
+            console.log("Изменившиеся криптовалюты:", changedCryptos);
+        }
+    } catch (error) {
+        console.error("Ошибка при получении изменившихся криптовалют:", error);
+    }
+};
+
+setTimeout(() => {
+    checkAndSendChangedCryptos();
+    setInterval(checkAndSendChangedCryptos, 5 * 60 * 1000);
+}, 5 * 60 * 1000);
+
+
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
-
-
-
