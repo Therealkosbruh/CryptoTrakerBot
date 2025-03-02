@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { fetchAndStoreCryptoData, getChangedCryptos } from "./services/cryptoService";
-import { subscribeToCrypto } from "./constollers/subscribeController";
+import { subscribeToCrypto, unsubscribeFromCrypto, getUserSubscriptions } from "./constollers/subscribeController";
 import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
@@ -24,7 +24,11 @@ app.get("/cryptos", async (req: Request, res: Response) => {
     }
 });
 
+app.get("/subscriptions/:userId", getUserSubscriptions);
+
 app.post("/subscribe", subscribeToCrypto);
+
+app.post("/unsubscribe", unsubscribeFromCrypto);
 
 app.get("/update-crypto", async (req: Request, res: Response) => {
     try {

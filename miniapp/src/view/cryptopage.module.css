@@ -1,6 +1,36 @@
-.pageTitle{
-    text-align: center;
-    margin-top: 20px;
-    font-size: 2rem;
-    margin-top: 150px;
+.pageTitle {
+  text-align: center;
+  margin-top: 150px;
+  font-size: 2rem;
 }
+
+.searchWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; 
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  padding: 4px 8px;
+  width: 300px; 
+}
+
+.searchContainer input {
+  border: none;
+  outline: none;
+  flex: 1;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  fill: silver;
+  font-size: 2rem;
+  padding-left: 4px;
+}
+
+  
