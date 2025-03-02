@@ -13,9 +13,10 @@ interface CryptoListProps {
   searchQuery: string;
   sortOrder: string | null;
   subscriptions: number[];
+  filterBySubscriptions: boolean;
 }
 
-const CryptoList: React.FC<CryptoListProps> = ({ searchQuery, sortOrder, subscriptions }) => {
+const CryptoList: React.FC<CryptoListProps> = ({ searchQuery, sortOrder, subscriptions, filterBySubscriptions }) => {
   const [cryptos, setCryptos] = useState<Crypto[]>([]);
   const [displayedCryptos, setDisplayedCryptos] = useState<Crypto[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -56,10 +57,15 @@ const CryptoList: React.FC<CryptoListProps> = ({ searchQuery, sortOrder, subscri
       filteredCryptos.sort((a, b) => b.price - a.price);
     }
 
+    if (filterBySubscriptions) {
+      filteredCryptos = filteredCryptos.filter((crypto) =>
+        userSubscriptions.includes(crypto.id)
+      );
+    }
+
     const startIndex = (page - 1) * pageSize;
-    const newCryptos = filteredCryptos.slice(0, startIndex + pageSize);
-    setDisplayedCryptos(newCryptos);
-  }, [cryptos, searchQuery, sortOrder, page]);
+    setDisplayedCryptos(filteredCryptos.slice(0, startIndex + pageSize));
+  }, [cryptos, searchQuery, sortOrder, page, filterBySubscriptions, userSubscriptions]);
 
   const loadMore = () => {
     setPage((prevPage) => prevPage + 1);

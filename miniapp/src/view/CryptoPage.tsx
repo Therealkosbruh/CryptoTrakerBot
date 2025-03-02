@@ -10,12 +10,13 @@ const CryptoPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
   const [sortOrder, setSortOrder] = useState<string | null>(null);
-  const [subscriptions, setSubscriptions] = useState<number[]>([]); 
+  const [subscriptions, setSubscriptions] = useState<number[]>([]);
+  const [filterBySubscriptions, setFilterBySubscriptions] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
-        const userId = '1327778297'; 
+        const userId = '1327778297';
         const response = await axios.get(`http://localhost:5000/subscriptions/${userId}`);
         const subscribedCryptoIds = response.data.map((crypto: any) => crypto.id);
         setSubscriptions(subscribedCryptoIds);
@@ -46,10 +47,16 @@ const CryptoPage: React.FC = () => {
   const handleFilterChange = (option: string) => {
     if (option === 'option1') {
       setSortOrder('asc');
+      setFilterBySubscriptions(false);
     } else if (option === 'option2') {
       setSortOrder('desc');
+      setFilterBySubscriptions(false);
+    } else if (option === 'option3') {
+      setSortOrder(null);
+      setFilterBySubscriptions(true);
     } else {
       setSortOrder(null);
+      setFilterBySubscriptions(false);
     }
   };
 
@@ -73,7 +80,8 @@ const CryptoPage: React.FC = () => {
       <CryptoList
         searchQuery={searchQuery}
         sortOrder={sortOrder}
-        subscriptions={subscriptions} 
+        subscriptions={subscriptions}
+        filterBySubscriptions={filterBySubscriptions}
       />
     </div>
   );
